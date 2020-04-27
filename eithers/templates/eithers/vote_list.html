@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h1 class="text-center">Votes</h1>
+<hr>
+{% if votes %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Category</th>
+      <th scope="col">Created_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for vote in votes %}
+    <tr>
+      <th scope="row">{{ vote.pk }}</th>
+      <td><a href="{% url 'eithers:detail' vote.pk %}">{{ vote.title }}</a></td>
+      <td>{{ vote.creator }}</td>
+      <td>{{ vote.category }}</td>
+      <td>{{ vote.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h3 class="text-center">작성된 투표가 없습니다.</h3>
+{% endif %}
+{% endblock %}
