@@ -23,12 +23,11 @@
               <a class="nav-item nav-link" href="{% url 'accounts:login' %}">Login</a>
               <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">Signup</a>
             {% endif %}
-              <a class="nav-item nav-link" href="{% url 'eithers:index' %}">Random Either</a>
-              <a class="nav-item nav-link" href="{% url 'eithers:create' %}">New Either</a>
+              <a class="nav-item nav-link" href="{% url 'eithers:random_vote' %}">Random Vote</a>
+              <a class="nav-item nav-link" href="{% url 'eithers:create' %}">New Vote</a>
         </div>
       </div>
     </nav>
-
     <div class="container mt-3" style="margin-bottom:60px">
     {% if messages %}
     {% for message in messages %}

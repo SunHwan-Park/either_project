@@ -8,5 +8,5 @@ urlpatterns = [
     path('create/', views.create, name='create'),
     path('<int:vote_pk>/', views.detail, name='detail'),
     path('<int:vote_pk>/comments/', views.comment_create, name='comment_create'),
-    path('<int:vote_pk>/selectitem/', views.selectitem, name='selectitem'),
+    path('random_vote/', views.random_vote, name='random_vote'),
 ]

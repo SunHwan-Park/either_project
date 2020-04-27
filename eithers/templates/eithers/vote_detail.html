@@ -2,41 +2,83 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<h1>{{ vote.title }} by {{ vote.creator }}</h1>
-<hr>
-<p>설명: {{ vote.description }}</p>
-<p>카테고리: {{ vote.category }}</p>
-<p>생성일시: {{ vote.created_at }}</p>
-<hr>
-{% if selection %}
-<h1>결과</h1>
-<h3>{{ vote.item1 }}: {{ vote.item1_num }}</h3>
-<h3>{{ vote.item2 }}: {{ vote.item2_num }}</h3>
-{% else %}
-<h3>선택해주세요!</h3>
-<form action="{% url 'eithers:selectitem' vote.pk %}" method="POST">
-    {% csrf_token %}
-    <button type="submit" name="item1">{{ vote.item1 }}</button>
-    <h3>vs</h3>
-    <button type="submit" name="item2">{{ vote.item2 }}</button>
-</form>
-{% endif %}
-<hr>
-<h4>댓글 | ({{ vote.comment_set.all.count }})</h4>
-<hr>
-{% for comment in vote.comment_set.all %}
-<div class="d-flex justify-content-between"><div class="d-inline col-8">{{ comment.content }} </div>
-<div class="d-inline col-4">작성자 : {{ comment.user }}<br>작성일 : {{ comment.created_at }}</div>
-<hr>
-{% empty %}
-<h4>댓글이 없습니다.</h4>
-<hr>
-{% endfor %}
-{% if user.is_authenticated %}
-<form action="{% url 'eithers:comment_create' vote.pk %}" method="POST">
-	{% csrf_token %}
-	{% bootstrap_form comment_form %}
-	<button>댓글 작성</button>
-</form>
-{% endif %}
+<div class="container my-3 py-3">
+    <h1 class="text-center">{{ vote.title }}</h1>
+    <hr>
+    <ul>
+        <li class="mb-0 "><b>작성자:</b> {{ vote.creator }}</li>
+        <li class="mb-0 "><b>설명:</b> {{ vote.description }}</li>
+        <li class="mb-0 "><b>카테고리:</b> {{ vote.category }}</li>
+        <li class="mb-0 "><b>생성일시:</b> {{ vote.created_at }}</li>
+    </ul>
+    <hr>
+    {% if myselection %}
+    <h3 class="text-center">Result</h3>
+    <h5 class="text-center">나의 선택:
+      {{ myselection }}
+    </h5>
+    </h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-6 bg-primary text-white text-center p-3 rounded">
+          <h3 class="my-3">{{ item1_ratio }}%</h3>
+          <h5 class="my-3">{{ vote.item1_num }}</h5>
+          <h4 class="my-3">{{ vote.item1 }}</h4>
+        </div>
+        <div class="col-6 bg-danger text-white text-center p-3 rounded">
+          <h3 class="my-3">{{ item2_ratio }}%</h3>
+          <h5 class="my-3">{{ vote.item2_num }}</h5>
+          <h4 class="my-3">{{ vote.item2 }}</h4>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <h3 class="text-center my-3">선택해주세요!</h3>
+    <form class="container" action="{% url 'eithers:detail' vote.pk %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <button class="col-6 m-0 py-5 bg-primary text-white btn-lg btn-block" type="submit" name="item1">{{ vote.item1 }}</button>
+          <button class="col-6 m-0 py-5 bg-danger text-white btn-lg btn-block" type="submit" name="item2">{{ vote.item2 }}</button>
+        </div>
+        </form>
+    {% endif %}
+</div>
+<div class="container border border-secondary rounded my-3 py-3">
+    <h5>댓글 | ({{ vote.comment_set.all.count }})</h4>
+    <hr>
+    {% if vote.comment_set.all %}
+    <table class="table table-striped text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Content</th>
+          <th scope="col">Author</th>
+          <th scope="col">Selection</th>
+          <th scope="col">Created_at</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comment in vote.comment_set.all %}
+        <tr>
+          <td>{{ comment.content }}</td>
+          <td>{{ comment.author }}</td>
+          <td>
+            {{ myselection }}
+          </td>
+          <td>{{ comment.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <h5>댓글이 없습니다.</h5>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <form action="{% url 'eithers:comment_create' vote.pk %}" method="POST">
+    	{% csrf_token %}
+    	{% bootstrap_form comment_form %}
+    	{% bootstrap_button "댓글 작성" button_type="submit" button_class="btn-primary" %}
+    </form>
+    {% endif %}
+</div>
 {% endblock %}
